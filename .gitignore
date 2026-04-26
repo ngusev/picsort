@@ -1,0 +1,22 @@
+# IDE
+*.iml
+.idea/
+.kotlin/
+.claude/
+
+# Internal-only docs (defensive — should not appear under the public package)
+.internal/
+.work/
+
+# Gradle
+.gradle/
+**/build/
+local.properties
+
+# OS
+.DS_Store
+Thumbs.db
+
+# App
+sorter.log
+*.jar
