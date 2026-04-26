@@ -15,7 +15,7 @@ PicSort doesn't want your photos. It just sorts them.
 - **Fully offline** — no internet connection needed
 - **No accounts** — no sign-up, no login, no tracking
 - **No AI** — no facial recognition, no content analysis, no "smart" features that phone home
-- **Open source (GPL v3)** — inspect every line, fork it, improve it
+- **Open source (MIT)** — inspect every line, fork it, improve it
 
 If you care about digital privacy, your photo library shouldn't live on someone else's server.
 
@@ -124,6 +124,6 @@ PicSort is free and open source. If it saved you some time, consider buying me a
 
 ## License
 
-This project is licensed under the **GNU General Public License v3.0**. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
 
-You're free to use, modify, and distribute PicSort. If you distribute a modified version, it must also be GPL v3. No closed-source forks.
+You're free to use, modify, and distribute PicSort — including in commercial or closed-source projects. Just keep the copyright notice.
