@@ -118,7 +118,7 @@ Contributions welcome. Open an issue first for anything non-trivial.
 
 PicSort is free and open source. If it saved you some time, consider buying me a coffee.
 
-[![Buy me a coffee](docs/kofi.webp)](https://ko-fi.com/ngusev)
+<a href="https://ko-fi.com/ngusev"><img src="docs/kofi.webp" alt="Buy me a coffee" width="180"></a>
 
 ---
 
