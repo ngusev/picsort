@@ -13,8 +13,8 @@ fun main(args: Array<String>) = runBlocking {
     val targetDir = Paths.get(args[1])
 
     println("Starting sort from $sourceDir to $targetDir")
-    PicSorter.prepareAndSort(sourceDir, targetDir) { processed, total ->
-        print("\r$processed / $total files")
+    PicSorter.prepareAndSort(sourceDir, targetDir) { message ->
+        println(message)
     }.sort()
-    println("\nSorting complete.")
+    println("Sorting complete.")
 }

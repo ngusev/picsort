@@ -39,7 +39,6 @@ object GuiLauncher {
 fun PicSortApp() {
     var sourcePath by remember { mutableStateOf<String?>(null) }
     var targetPath by remember { mutableStateOf<String?>(null) }
-    var progress by remember { mutableFloatStateOf(0f) }
     var statusText by remember { mutableStateOf("") }
     var sorting by remember { mutableStateOf(false) }
     var outputLog by remember { mutableStateOf("") }
@@ -76,7 +75,6 @@ fun PicSortApp() {
                 val tgt = targetPath
                 if (src != null && tgt != null) {
                     sorting = true
-                    progress = 0f
                     logBuilder.clear()
                     logBuilder.append("Starting sort...\nSource: $src\nTarget: $tgt\n")
                     outputLog = logBuilder.toString()
@@ -84,15 +82,11 @@ fun PicSortApp() {
                     scope.launch {
                         val sorter = PicSorter.prepareAndSort(
                             Paths.get(src), Paths.get(tgt)
-                        ) { processed, total ->
-                            val interval = (total / 100).coerceAtLeast(1)
-                            if (processed == total || processed % interval == 0) {
-                                scope.launch {
-                                    progress = processed.toFloat() / total
-                                    statusText = "$processed / $total files"
-                                    logBuilder.append("Processed $processed / $total files\n")
-                                    outputLog = logBuilder.toString()
-                                }
+                        ) { message ->
+                            scope.launch {
+                                statusText = message
+                                logBuilder.append("$message\n")
+                                outputLog = logBuilder.toString()
                             }
                         }
                         withContext(Dispatchers.IO) { sorter.sort() }
@@ -108,12 +102,6 @@ fun PicSortApp() {
             }, enabled = !sorting
         ) {
             Text("Start Sorting")
-        }
-
-        if (sorting) {
-            LinearProgressIndicator(
-                progress = { progress }, modifier = Modifier.fillMaxWidth()
-            )
         }
 
         if (statusText.isNotEmpty()) {

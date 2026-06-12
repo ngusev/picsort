@@ -25,18 +25,18 @@ import java.util.logging.LogRecord
 import java.util.logging.Logger
 import kotlin.io.path.*
 
-typealias ProgressCallback = (processed: Int, total: Int) -> Unit
+typealias LogCallback = (message: String) -> Unit
 
 class PicSorter(
     private val sourceDir: Path,
     private val targetDir: Path,
     private val logger: Logger,
     private val fileHandler: FileHandler,
-    private val onProgress: ProgressCallback = { _, _ -> }
+    private val onMessage: LogCallback = {}
 ) {
     companion object {
         fun prepareAndSort(
-            sourceDir: Path, parentTargetDir: Path, onProgress: ProgressCallback = { _, _ -> }
+            sourceDir: Path, parentTargetDir: Path, onMessage: LogCallback = {}
         ): PicSorter {
             val dtfLog = DateTimeFormatter.ofPattern("yyyy-MM-dd-HHmmss")
             val nowStr = LocalDateTime.now().format(dtfLog)
@@ -55,7 +55,7 @@ class PicSorter(
             logger.addHandler(fileHandler)
 
             logger.info("Starting sort at $nowStr")
-            return PicSorter(sourceDir, targetDir, logger, fileHandler, onProgress)
+            return PicSorter(sourceDir, targetDir, logger, fileHandler, onMessage)
         }
     }
 
@@ -85,27 +85,31 @@ class PicSorter(
     private val failedCount = AtomicInteger(0)
     private val foundExtensions = ConcurrentSkipListSet<String>()
 
+    private fun report(message: String) {
+        logger.info(message)
+        onMessage(message)
+    }
+
     suspend fun sort() = withContext(Dispatchers.IO) {
         try {
-            val entries = Files.walk(sourceDir).use { paths -> paths.toList() }
-
-            val dirs = entries.filter { it.isDirectory() }
-            val files = entries.filter { Files.isRegularFile(it) }
-            val total = files.size
-            val progressCounter = AtomicInteger(0)
-
-            logger.info("Found ${dirs.size} folders, $total files")
-
-            files.map { path ->
-                async {
-                    handleFile(path)
-                    onProgress(progressCounter.incrementAndGet(), total)
+            // Walk the tree folder-by-folder, processing each folder's files as we reach it.
+            // No upfront counting pass — we just walk and report as we go.
+            val dirs = Files.walk(sourceDir).use { it.filter(Files::isDirectory).toList() }
+            var fileCount = 0
+            for (dir in dirs) {
+                val rel = sourceDir.relativize(dir).toString().ifEmpty { sourceDir.fileName.toString() }
+                report("Folder: $rel")
+                val files = Files.list(dir).use { stream ->
+                    stream.filter(Files::isRegularFile).toList()
                 }
-            }.awaitAll()
+                files.map { path -> async { handleFile(path) } }.awaitAll()
+                fileCount += files.size
+                report("  processed $fileCount files")
+            }
 
-            logger.info("Result: folders>${dirs.size} files>$total processed>${processedCount.get()} failed>${failedCount.get()}")
+            report("Result: folders>${dirs.size} files>$fileCount processed>${processedCount.get()} failed>${failedCount.get()}")
             if (foundExtensions.isNotEmpty()) {
-                logger.info("Unknown extensions: $foundExtensions")
+                report("Unknown extensions: $foundExtensions")
             }
         } finally {
             fileHandler.close()
