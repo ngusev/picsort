@@ -135,7 +135,7 @@ fun PicSortApp() {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text("PicSort 1.0.2", style = MaterialTheme.typography.bodySmall)
+            Text("PicSort 1.1.0", style = MaterialTheme.typography.bodySmall)
             Row(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalAlignment = Alignment.CenterVertically

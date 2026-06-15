@@ -78,23 +78,23 @@ target/
 ```
 
 Produces two JARs in `build/libs/`:
-- `picsort-cli-1.0.2.jar` — command-line interface
-- `picsort-gui-1.0.2.jar` — desktop GUI
+- `picsort-cli-1.1.0.jar` — command-line interface
+- `picsort-gui-1.1.0.jar` — desktop GUI
 
 ### GUI
 
 ```bash
-java -jar build/libs/picsort-gui-1.0.2.jar
+java -jar build/libs/picsort-gui-1.1.0.jar
 ```
 
-Pick your source and target folders, hit sort, and watch the progress bar and live output log.
+Pick your source and target folders, hit sort, and watch the live output log as each folder is processed.
 
 ![PicSort GUI](docs/screenshot.png)
 
 ### CLI
 
 ```bash
-java -jar build/libs/picsort-cli-1.0.2.jar /path/to/photos /path/to/sorted
+java -jar build/libs/picsort-cli-1.1.0.jar /path/to/photos /path/to/sorted
 ```
 
 ---

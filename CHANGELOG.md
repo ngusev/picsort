@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.0] - 2026-06-15
+
+- Replace the progress bar and percentage reporting with a streaming, folder-by-folder log — the GUI and CLI now show the current folder, a running count of files processed, and a final summary
+- Sorting starts immediately: removed the upfront pass that counted every file before any work began
+- GUI: progress bar removed; the output log shows the streamed messages directly
+
 ## [1.0.2] - 2026-04-14
 
 - Fix performance regression in GUI: progress callbacks now dispatch to the main thread via `scope.launch` instead of writing Compose state directly from IO threads
