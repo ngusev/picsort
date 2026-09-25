@@ -23,33 +23,43 @@ If you care about digital privacy, your photo library shouldn't live on someone 
 
 ## What It Does
 
-Point PicSort at a folder of unsorted photos and videos. It reads the metadata timestamps and copies everything into a clean structure:
+Point PicSort at a folder of unsorted photos and videos. It reads the metadata timestamps and copies everything into a clean structure. Each run gets its own timestamped folder inside the target, so runs never mix:
 
 ```
 target/
-├── pictures/
-│   ├── 2024/
-│   │   ├── 2024-01-15/
-│   │   │   ├── IMG_0042.jpg
-│   │   │   └── IMG_0043.heic
-│   │   └── 2024-03-22/
-│   │       └── vacation.jpg
-│   └── 2025/
-│       └── 2025-06-01/
-│           └── birthday.heic
-├── video/
-│   └── 2024/
-│       └── 2024-07-04/
-│           └── fireworks.mp4
-└── other/
-    └── screenshot.png
+└── 2026-06-15-143012/
+    ├── pictures/
+    │   ├── 2024/
+    │   │   ├── 2024-01-15/
+    │   │   │   ├── IMG_0042.jpg
+    │   │   │   └── IMG_0043.heic
+    │   │   └── 2024-03-22/
+    │   │       └── vacation.jpg
+    │   ├── 2025/
+    │   │   └── 2025-06-01/
+    │   │       └── birthday.heic
+    │   └── wrong_date/
+    │       └── 1980/
+    │           └── 1980-01-01/
+    │               └── IMG_0001.jpg
+    ├── video/
+    │   └── 2024/
+    │       └── 2024-07-04/
+    │           └── fireworks.mp4
+    ├── other/
+    │   └── screenshots/
+    │       └── screenshot.png
+    └── sorter.log
 ```
 
 - Reads EXIF data (photos) and QuickTime/MP4 metadata (videos) for accurate dates
+- Your originals are never moved or modified — everything is copied
 - Handles duplicates automatically with `_1`, `_2` suffixes
-- Files without valid date metadata go to `other/`
+- Dates before 1990 (usually a camera with an unset clock) go to `wrong_date/` for review
+- Files without date metadata, and the formats listed below as `other/`, are copied to `other/`, keeping their original subfolder
+- Files of unrecognized types are not copied — they're listed in the log so you can handle them
 - Processes files concurrently for speed
-- Logs everything to `sorter.log`
+- Logs everything to `sorter.log` in the run folder
 
 ---
 
